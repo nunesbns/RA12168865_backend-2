@@ -1,0 +1,33 @@
+version: '3'
+services:
+  web:
+    container_name: mapa_53-2021
+    build:
+      context: .
+    volumes:
+      - '.:/var/www/html'
+    ports:
+      - '80:80'
+    networks:
+      - gateway_net
+  db:
+    container_name: maria_db
+    image: mariadb:10.4.3
+    restart: always
+    environment:
+      MYSQL_USER: $DB_USERNAME
+      MYSQL_PASSWORD: $DB_PASSWORD
+      MYSQL_ROOT_PASSWORD: $DB_PASSWORD
+      MYSQL_DATABASE: $DB_DATABASE
+      MYSQL_RANDOM_ROOT_PASSWORD: ""
+    volumes:
+      - ./docker/db:/var/lib/mysql
+    ports:
+      - 3307:3306
+    command:
+      mysqld --innodb-flush-method=fsync
+    networks:
+      - gateway_net
+networks:
+  gateway_net:
+    external: true
